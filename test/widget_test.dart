@@ -5,26 +5,21 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:novel_vault_tracker/data/datasources/in_memory_novel_data_source.dart';
+import 'package:novel_vault_tracker/data/repositories/novel_repository_impl.dart';
 import 'package:novel_vault_tracker/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('Novel Vault Tracker opens', (WidgetTester tester) async {
+    final repository = NovelRepositoryImpl(
+      dataSource: InMemoryNovelDataSource(),
+    );
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    await tester.pumpWidget(MyApp(repository: repository));
+    await tester.pump(const Duration(milliseconds: 60));
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(find.text('Novel Vault Tracker'), findsOneWidget);
   });
 }
